@@ -1,0 +1,56 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="spacing_xsmall">4dp</dimen>
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_xlarge">32dp</dimen>
+    <dimen name="elevation_low">9dp</dimen>
+    <dimen name="elevation_high">12dp</dimen>
+    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_short">8dp</dimen>
+    <dimen name="margin_extra_short">4dp</dimen>
+    <dimen name="toolbar_margin_start">72dp</dimen>
+    <dimen name="flexible_space_height">72dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">120dp</dimen>
+    <dimen name="parallax_image_height">180dp</dimen>
+    <dimen name="header_bar_height">72dp</dimen>
+    <dimen name="intersection_height">16dp</dimen>
+    <dimen name="sliding_slop">32dp</dimen>
+    <dimen name="sliding_overlay_blur_size">4dp</dimen>
+
+    <!-- 各种字体大小 -->
+    <dimen name="stroke">0.5px</dimen>
+    <dimen name="text_navigation">17dp</dimen>
+    <dimen name="text_title">15dp</dimen>
+    <dimen name="text_content">14dp</dimen>
+    <dimen name="text_tips">12dp</dimen>
+    <dimen name="actionBarSize">48dp</dimen>
+
+    <dimen name="text_small">10dp</dimen>
+    <dimen name="tab_height">40dp</dimen>
+    <dimen name="avatar_small">32dp</dimen>
+    <dimen name="list_space">16dp</dimen>
+    <dimen name="button_height">38dp</dimen>
+    <dimen name="little_space">4dp</dimen>
+    <dimen name="small_space">8dp</dimen>
+    <dimen name="navigation_drawer_width">240dp</dimen>
+
+    <dimen name="flexible_space_image_height">200dp</dimen>
+    <!--google 官方material design推荐的字体大小-->
+    <dimen name="md_button_text_size">14dp</dimen>
+    <dimen name="md_menu_text_size">14dp</dimen>
+    <dimen name="md_caption_text_size">12dp</dimen>
+    <dimen name="md_body_text_size">14dp</dimen>
+    <dimen name="md_title_text_size">20dp</dimen>
+    <dimen name="md_headline_text_size">14dp</dimen>
+    <dimen name="md_display1_text_size">34dp</dimen>
+    <dimen name="md_display2_text_size">45dp</dimen>
+    <dimen name="md_display3_text_size">56dp</dimen>
+
+    <!--google 官方material design推荐的间距大小-->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+</resources>
