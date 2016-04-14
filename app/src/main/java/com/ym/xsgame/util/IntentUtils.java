@@ -1,9 +1,11 @@
 package com.ym.xsgame.util;
 
+import com.ym.xsgame.GameDetailActivity;
+import com.ym.xsgame.WebViewActivity;
+import com.ym.xsgame.po.Result;
+
 import android.content.Context;
 import android.content.Intent;
-
-import com.ym.xsgame.WebViewActivity;
 
 /**
  * 项目名称：railtool
@@ -25,4 +27,10 @@ public class IntentUtils {
         context.startActivity(intent);
     }
 
+
+    public static void enterGameDetailActivity(Context context, Result.ReturnDataEntity.GameData gameData) {
+        Intent intent = new Intent(context, GameDetailActivity.class);
+        intent.putExtra("GameData", gameData);
+        context.startActivity(intent);
+    }
 }

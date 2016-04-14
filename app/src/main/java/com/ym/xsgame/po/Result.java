@@ -1,5 +1,6 @@
 package com.ym.xsgame.po;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -68,13 +69,13 @@ public class Result {
          * spackage :
          */
 
-        private List<DataEntity> data;
+        private List<GameData> data;
 
         public void setPage(PageEntity page) {
             this.page = page;
         }
 
-        public void setData(List<DataEntity> data) {
+        public void setData(List<GameData> data) {
             this.data = data;
         }
 
@@ -82,7 +83,7 @@ public class Result {
             return page;
         }
 
-        public List<DataEntity> getData() {
+        public List<GameData> getData() {
             return data;
         }
 
@@ -116,7 +117,7 @@ public class Result {
             }
         }
 
-        public static class DataEntity {
+        public static class GameData implements Serializable {
             private int igameid;
             private String sname;
             private String spop;

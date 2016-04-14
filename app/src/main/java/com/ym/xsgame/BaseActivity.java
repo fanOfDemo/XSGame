@@ -1,5 +1,9 @@
 package com.ym.xsgame;
 
+import com.ym.xsgame.util.Api.Config;
+import com.ym.xsgame.util.Api.RtApi;
+import com.ym.xsgame.util.retrofit.RxUtils;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -7,15 +11,10 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.ym.xsgame.util.Api.Config;
-import com.ym.xsgame.util.Api.RtApi;
-import com.ym.xsgame.util.retrofit.RxUtils;
-
-import butterknife.ButterKnife;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * 项目名称：jianyue
+ * 项目名称：xsgame
  * 类描述：
  * 创建人：wengyiming
  * 创建时间：15/11/16 下午10:34
@@ -39,7 +38,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutRes());
         TAG = getActivity().getClass().getSimpleName();
         mProgressDialog = new ProgressDialog(getActivity());
-        ButterKnife.bind(getActivity());
         initToolBar();
     }
 
@@ -70,7 +68,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        ButterKnife.unbind(getActivity());
         super.onDestroy();
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();

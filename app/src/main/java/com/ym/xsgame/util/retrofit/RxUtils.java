@@ -1,22 +1,15 @@
 package com.ym.xsgame.util.retrofit;
 
-import android.util.Log;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import java.io.IOException;
-
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * 项目名称：railtool
+ * 项目名称：xsgame
  * 类描述：
  * 创建人：wengyiming
  * 创建时间：15/11/16 下午10:18
@@ -52,7 +45,6 @@ public class RxUtils {
 
     public static <T> T createApi(Class<T> c, String url) {
         OkHttpClient client = OkHttpClientManager.getInstance(); //create OKHTTPClient
-        client.interceptors().add(new LoggingInterceptor());
         Retrofit retrofit = RetrofitManager.getInstance()
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -63,36 +55,4 @@ public class RxUtils {
 
     }
 
-//    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
-//        @Override
-//        public Response intercept(final Chain chain) throws IOException {
-//            Response originalResponse = chain.proceed(chain.request());
-//            return originalResponse.newBuilder()
-//                    .header("User-Agent", UA)
-//                    .header("Accept", "application/json; q=0.5")
-//                    .build();
-//        }
-//    };
-
-    /**
-     * see http://stackoverflow.com/questions/24952199/okhttp-enable-logs
-     */
-    static class LoggingInterceptor implements Interceptor {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-
-            long t1 = System.nanoTime();
-            Log.v("OkHttp", String.format("Sending request %s on %s%n%s",
-                    request.url(), chain.connection(), request.headers()));
-
-            Response response = chain.proceed(request);
-
-            long t2 = System.nanoTime();
-            Log.v("OkHttp", String.format("Received response for %s in %.1fms%n%s",
-                    response.request().url(), (t2 - t1) / 1e6d, response.headers()));
-
-            return response;
-        }
-    }
 }

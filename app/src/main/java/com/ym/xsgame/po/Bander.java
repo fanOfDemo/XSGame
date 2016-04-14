@@ -57,17 +57,17 @@ public class Bander {
          * ipage : 1
          */
 
-        private List<DataEntity> data;
+        private List<BannerGame> data;
 
-        public void setData(List<DataEntity> data) {
+        public void setData(List<BannerGame> data) {
             this.data = data;
         }
 
-        public List<DataEntity> getData() {
+        public List<BannerGame> getData() {
             return data;
         }
 
-        public static class DataEntity {
+        public static class BannerGame {
             private int iid;
             private int iplat;
             private int itypeid;

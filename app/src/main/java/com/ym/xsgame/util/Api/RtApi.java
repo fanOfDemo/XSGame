@@ -4,12 +4,12 @@ package com.ym.xsgame.util.Api;
 import com.ym.xsgame.po.Bander;
 import com.ym.xsgame.po.Result;
 
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
- * 项目名称：railtool
+ * 项目名称：xsgame
  * 类描述：
  * 创建人：wengyiming
  * 创建时间：15/11/16 下午10:34

@@ -1,22 +1,21 @@
 package com.ym.xsgame.util.retrofit;
 
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.ym.xsgame.AppClient;
 import com.ym.xsgame.util.common.L;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.Cache;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
- * 项目名称：railtool
+ * 项目名称：xsgame
  * 类描述：
  * 创建人：wengyiming
  * 创建时间：15/11/16 下午10:34
@@ -45,17 +44,16 @@ public class OkHttpClientManager {
             synchronized (OkHttpClientManager.class) {
                 if (sInstance == null) {
                     sInstance = new OkHttpClient();
-                    //cookie enabled
-                    sInstance.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
-                    //从主机读取数据超时
-                    sInstance.setReadTimeout(15, TimeUnit.SECONDS);
-                    //连接主机超时
-                    sInstance.setConnectTimeout(20, TimeUnit.SECONDS);
-                    sInstance.interceptors().add(new LoggingInterceptor());
-                    sInstance.networkInterceptors().add(REWRITE_CACHE_CONTROL_INTERCEPTOR);
                     File cacheFile = new File(AppClient.getInstance().getCacheDir(), AppClient.getInstance().getExternalCacheDir().getPath());
                     Cache cache = new Cache(cacheFile, 1024 * 1024 * 100); //100Mb
-                    sInstance.setCache(cache);
+
+                    sInstance = new OkHttpClient.Builder()
+                            .addInterceptor(new LoggingInterceptor())
+                            .retryOnConnectionFailure(true)
+                            .connectTimeout(15, TimeUnit.SECONDS)
+                            .cache(cache)
+                            .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                            .build();
 
                 }
             }
@@ -65,29 +63,24 @@ public class OkHttpClientManager {
 
 
     /**
-     * see http://stackoverflow.com/questions/24952199/okhttp-enable-logs
+     * see https://github.com/square/okhttp/wiki/Interceptors
      */
     static class LoggingInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
+            Request original = chain.request();
 //            String deviceId = AppUtils.getLocaldeviceId();
 //            String deviceMac = AppUtils.getLocalMacAddress();
 //            String osName = "android" + android.os.Build.VERSION.RELEASE;
 //            PackageManager pm = AppClient.getInstance().getPackageManager();
 //            String appName = AppClient.getInstance().getApplicationInfo().loadLabel(pm).toString();
-//
-//
 //            L.e(TAG, "deviceMac：" + deviceMac);
-//            L.e(TAG,"osName" + osName);
-//            L.e(TAG,"appName" + appName);
-
-
+//            L.e(TAG, "osName" + osName);
+//            L.e(TAG, "appName" + appName);
 //            Request request = original.newBuilder()
 ////                    .header("Cache-Control", "public")
 ////                    .header("max-age", "604800")
 ////                    .header("max-stale", "2419200")
-//
 ////                    .header("terminal-type", "pad")
 ////                    .header("device-number", deviceId)
 //                    .header("device-mac", deviceMac)
@@ -106,14 +99,15 @@ public class OkHttpClientManager {
 
 
             long t1 = System.nanoTime();
-            L.e(TAG,String.format("Sending request %s on %s%n%s",
-                    request.url(), chain.connection(), request.headers()));
-            Response response = chain.proceed(request);
+            L.e(TAG, String.format("Sending request %s on %s%n%s",
+                    original.url(), chain.connection(), original.headers()));
+            Response response = chain.proceed(original);
             long t2 = System.nanoTime();
-            L.e(TAG,String.format("Received response for %s in %.1fms%n%s",
+            L.e(TAG, String.format("Received response for %s in %.1fms%n%s",
                     response.request().url(), (t2 - t1) / 1e6d, response.headers()));
 
             return response;
         }
     }
+
 }

@@ -63,12 +63,15 @@
                 android:textSize="@dimen/text_content"/>
 
             <TextView
-                android:id="@+id/goods_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/aciton"
+                android:layout_width="64dp"
+                android:layout_height="32dp"
                 android:layout_marginTop="@dimen/small_space"
-                android:textSize="@dimen/text_tips"
-                android:textColor="@color/tips_text"/>
+                android:background="@color/md_red_400_color_code"
+                android:textSize="@dimen/text_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/md_white_color_code"/>
 
         </LinearLayout>
 
