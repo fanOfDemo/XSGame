@@ -41,6 +41,28 @@
 
         <activity android:name=".GameDetailActivity">
         </activity>
+
+        <activity android:name=".downloaddemo.MainActivity"/>
+        <activity
+                android:name=".downloaddemo.HybridTestActivity"
+                android:label="@string/hybrid_test_title"/>
+
+        <activity
+                android:name=".downloaddemo.SingleTaskTestActivity"
+                android:label="@string/single_task_test_title"/>
+
+        <activity
+                android:name=".downloaddemo.MultitaskTestActivity"
+                android:label="@string/multitask_test_title"/>
+
+        <activity android:name=".downloaddemo.performance.PerformanceTestActivity"/>
+
+        <activity
+                android:name=".downloaddemo.TasksManagerDemoActivity"
+                android:label="@string/tasks_manager_demo_title"/>
+        <activity
+                android:name=".downloaddemo.NotificationDemoActivity"
+                android:label="@string/notification_demo_title"/>
     </application>
 
 </manifest>

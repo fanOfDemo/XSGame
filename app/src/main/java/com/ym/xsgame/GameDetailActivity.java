@@ -4,11 +4,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.ym.xsgame.po.Result;
+import com.ym.xsgame.util.common.AppUtils;
 import com.ym.xsgame.util.common.L;
+import com.ym.xsgame.util.common.NetUtils;
 import com.yw.filedownloader.BaseDownloadTask;
 import com.yw.filedownloader.FileDownloadListener;
 import com.yw.filedownloader.FileDownloader;
-import com.yw.filedownloader.util.FileDownloadNotificationHelper;
 import com.yw.filedownloader.util.FileDownloadUtils;
 
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -30,9 +32,8 @@ public class GameDetailActivity extends AppCompatActivity implements View.OnClic
     private ProgressBar progressBar;
 
 
-    private String savePath = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "qdgame";
-
-    private FileDownloadNotificationHelper notificationHelper;
+    private String savePath = FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "Download";
+    private String filePath;
     private Result.ReturnDataEntity.GameData mGameData;
     private int downloadId = 0;
     private boolean isDownloading = false;
@@ -43,6 +44,13 @@ public class GameDetailActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_game_detail);
         initGameInfo();
         downLoadBtn.setOnClickListener(this);
+
+        File file = new File(savePath);
+        if (file.exists()) {
+            changeDownloadState(0);
+        } else {
+            downLoadBtn.setText("开始");
+        }
 
     }
 
@@ -65,6 +73,14 @@ public class GameDetailActivity extends AppCompatActivity implements View.OnClic
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .crossFade()
                 .into(gameLogo);
+
+        filePath = savePath + File.separator + mGameData.getSname() + ".apk";
+        File file = new File(filePath);
+        if (file.exists()) {
+            downLoadBtn.setText("下载");
+        }
+
+        cotinuDownload();
     }
 
     private void changeDownloadState(int per) {
@@ -89,71 +105,93 @@ public class GameDetailActivity extends AppCompatActivity implements View.OnClic
         int id = v.getId();
         switch (id) {
             case R.id.donwload_btn:
-                if (isDownloading) {
-                    FileDownloader.getImpl().pause(downloadId);
-                    return;
-                }
-                downloadId = FileDownloader.getImpl().create(mGameData.getSurl())
-                        .setPath(savePath)
-                        .setListener(new FileDownloadListener() {
-                            @Override
-                            protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                                progressBar.setIndeterminate(true);
-                                isDownloading = true;
-                                changeDownloadState(0);
-                            }
-
-                            @Override
-                            protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                                progressBar.setIndeterminate(false);
-                                progressBar.setMax(100);
-                                int per =(int) ((float)soFarBytes / (float)task.getSmallFileTotalBytes())*100;
-                                L.e(TAG,"soFarBytes:"+soFarBytes+"  totalBytes:"+totalBytes+"  per:"+per+"");
-                                progressBar.setProgress(per);
-                                isDownloading = true;
-                                changeDownloadState(per);
-                            }
-
-                            @Override
-                            protected void blockComplete(BaseDownloadTask task) {
-                                isDownloading = true;
-                                changeDownloadState(100);
-                            }
-
-                            @Override
-                            protected void completed(BaseDownloadTask task) {
-                                progressBar.setIndeterminate(false);
-                                isDownloading = false;
-                                int per = task.getSmallFileSoFarBytes() / task.getSmallFileTotalBytes()*100;
-                                progressBar.setProgress(per);
-                                changeDownloadState(per);
-                            }
-
-                            @Override
-                            protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                                progressBar.setIndeterminate(false);
-                                isDownloading = false;
-                                int per = soFarBytes / totalBytes*100;
-                                progressBar.setProgress(per);
-                                changeDownloadState(per);
-                            }
-
-                            @Override
-                            protected void error(BaseDownloadTask task, Throwable e) {
-                                isDownloading = false;
-                                int per = task.getSmallFileSoFarBytes() / task.getSmallFileTotalBytes()*100;
-                                changeDownloadState(per);
-                            }
-
-                            @Override
-                            protected void warn(BaseDownloadTask task) {
-                                isDownloading = false;
-                                int per = task.getSmallFileSoFarBytes() / task.getSmallFileTotalBytes()*100;
-                                changeDownloadState(per);
-                            }
-                        })
-                        .start();
+                cotinuDownload();
                 break;
         }
     }
+
+    private void cotinuDownload() {
+        if (isDownloading) {
+            FileDownloader.getImpl().pause(downloadId);
+            isDownloading = false;
+            return;
+        }
+
+        if (!NetUtils.isWifi(this)) {
+            Toast.makeText(GameDetailActivity.this, "请在wifi网络下下载大文件游戏", Toast.LENGTH_SHORT).show();
+        }
+        downloadId = FileDownloader.getImpl().create(mGameData.getSurl())
+                .setPath(filePath)
+                .setListener(new FileDownloadListener() {
+                    @Override
+                    protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        progressBar.setIndeterminate(true);
+                        isDownloading = true;
+                        float sofar = soFarBytes / 100;
+                        float total = totalBytes / 100;
+                        int per = (int) ((sofar / total) * 100);
+                        changeDownloadState(per);
+                    }
+
+                    @Override
+                    protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        progressBar.setIndeterminate(false);
+                        progressBar.setMax(totalBytes);
+                        float sofar = soFarBytes / 100;
+                        float total = totalBytes / 100;
+                        int per = (int) ((sofar / total) * 100);
+                        L.e(TAG, "soFarBytes:" + soFarBytes + "  totalBytes:" + totalBytes + "  per:" + per + "");
+                        progressBar.setProgress(per);
+                        isDownloading = true;
+                        changeDownloadState(per);
+                    }
+
+                    @Override
+                    protected void blockComplete(BaseDownloadTask task) {
+                        isDownloading = true;
+                        changeDownloadState(100);
+
+                    }
+
+                    @Override
+                    protected void completed(BaseDownloadTask task) {
+                        progressBar.setIndeterminate(false);
+                        isDownloading = false;
+                        float sofar = task.getSmallFileSoFarBytes() / 100;
+                        float total = task.getSmallFileTotalBytes() / 100;
+                        int per = (int) ((sofar / total) * 100);
+                        progressBar.setProgress(per);
+                        changeDownloadState(per);
+
+
+                        L.e(TAG, task.getPath());
+                        AppUtils.install(GameDetailActivity.this, task.getPath());
+                    }
+
+                    @Override
+                    protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        progressBar.setIndeterminate(false);
+                        isDownloading = false;
+                        float sofar = soFarBytes / 100;
+                        float total = totalBytes / 100;
+                        int per = (int) ((sofar / total) * 100);
+                        progressBar.setProgress(per);
+                        changeDownloadState(per);
+                    }
+
+                    @Override
+                    protected void error(BaseDownloadTask task, Throwable e) {
+                        isDownloading = false;
+                        L.e(TAG, e.toString());
+                    }
+
+                    @Override
+                    protected void warn(BaseDownloadTask task) {
+                        isDownloading = false;
+                    }
+                })
+                .start();
+    }
+
+
 }

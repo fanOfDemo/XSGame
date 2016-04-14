@@ -11,6 +11,7 @@ import com.ym.xsgame.util.common.L;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -50,6 +51,13 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mGameListAdapter.setGameClickListener(this);
         getGameList();
 
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MainActivity.this, com.ym.xsgame.downloaddemo.MainActivity.class);
+                startActivity(intent);
+            }
+        }, 5000);
 
     }
 
@@ -147,4 +155,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 }

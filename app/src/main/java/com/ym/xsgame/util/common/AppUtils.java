@@ -279,4 +279,13 @@ public class AppUtils {
             ctx.startActivity(intent);
         }
     }
+
+
+    public  static  void install(Context ctx, String filePath) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setDataAndType(Uri.parse("file://" + filePath), "application/vnd.android.package-archive");
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(i);
+    }
+
 }
