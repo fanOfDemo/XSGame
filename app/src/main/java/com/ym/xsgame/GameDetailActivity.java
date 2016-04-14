@@ -79,6 +79,14 @@ public class GameDetailActivity extends AppCompatActivity implements View.OnClic
         if (file.exists()) {
             downLoadBtn.setText("下载");
         }
+        /**
+         * TODO
+         * 检查文件是否存在
+         * 获取文件大小并恢复进度
+         * 设置未非下载状态
+         *
+         *
+         */
 
         cotinuDownload();
     }
