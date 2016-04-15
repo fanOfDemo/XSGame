@@ -50,16 +50,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mRecycler.setupMoreListener(this, 1);
         mGameListAdapter.setGameClickListener(this);
         getGameList();
-
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(MainActivity.this, com.ym.xsgame.downloaddemo.MainActivity.class);
-                startActivity(intent);
-            }
-        }, 5000);
-
     }
+
 
     @Override
     public int getLayoutRes() {
@@ -146,7 +138,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     @Override
     public void onApkGameOpenClick(Result.ReturnDataEntity.GameData gameData) {
         AppUtils.openGame(this, gameData.getSpackage());
-
     }
 
     @Override
@@ -160,4 +151,15 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         super.onResume();
 
     }
+
+    private void gotoCompleteDemo() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MainActivity.this, com.ym.xsgame.downloaddemo.MainActivity.class);
+                startActivity(intent);
+            }
+        }, 5000);
+    }
+
 }

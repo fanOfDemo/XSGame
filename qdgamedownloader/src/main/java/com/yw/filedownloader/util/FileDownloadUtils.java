@@ -53,6 +53,7 @@ public class FileDownloadUtils {
 
     private static String DEFAULT_SAVE_ROOT_PATH;
 
+    @SuppressWarnings("ConstantConditions")
     public static String getDefaultSaveRootPath() {
         if (!TextUtils.isEmpty(DEFAULT_SAVE_ROOT_PATH)) {
             return DEFAULT_SAVE_ROOT_PATH;
@@ -71,7 +72,7 @@ public class FileDownloadUtils {
 
     /**
      * The path is used as Root Path in the case of task without setting path in the entire Download Engine
-     * {@link com.liulishuo.filedownloader.BaseDownloadTask#setPath(String)}
+     * {@link com.yw.filedownloader.BaseDownloadTask#setPath(String)}
      *
      * @param path default root path for save download file.
      */
@@ -182,6 +183,7 @@ public class FileDownloadUtils {
         return namesAndValues;
     }
 
+    @SuppressWarnings("deprecation")
     public static long getFreeSpaceBytes(final String path) {
         long freeSpaceBytes;
         final StatFs statFs = new StatFs(path);

@@ -16,18 +16,19 @@
 
 package com.yw.filedownloader;
 
-import android.app.Application;
-import android.content.Context;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Message;
-
 import com.yw.filedownloader.event.DownloadServiceConnectChangedEvent;
 import com.yw.filedownloader.util.FileDownloadHelper;
 import com.yw.filedownloader.util.FileDownloadLog;
 import com.yw.filedownloader.util.FileDownloadUtils;
 
 import junit.framework.Assert;
+
+import android.app.Application;
+import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -68,8 +69,9 @@ public class FileDownloader {
             FileDownloadLog.d(FileDownloader.class, "init Downloader");
         }
         FileDownloadHelper.holdContext(context);
-
-        if (okHttpClientCustomMaker != null && FileDownloadUtils.isDownloaderProcess(context)) {
+//        && FileDownloadUtils.isDownloaderProcess(context)
+        Log.e("init", (okHttpClientCustomMaker == null) + "  " + (FileDownloadUtils.isDownloaderProcess(context)) + "");
+        if (okHttpClientCustomMaker != null ) {
             FileDownloadHelper.setOkHttpClient(okHttpClientCustomMaker.customMake());
         }
     }
@@ -102,8 +104,11 @@ public class FileDownloader {
      * For Avoid Missing Screen Frames.
      * 避免掉帧
      * <p/>
-     * Every {@link FileDownloadEventPool#INTERVAL} milliseconds post 1 message to the ui thread at most,
-     * and will handle up to {@link FileDownloadEventPool#SUB_PACKAGE_SIZE} events(callbacks) on the ui thread.
+     * Every {@link FileDownloadEventPool#INTERVAL} milliseconds post 1 message to the ui thread at
+     * most,
+     * and will handle up to {@link FileDownloadEventPool#SUB_PACKAGE_SIZE} events(callbacks) on
+     * the
+     * ui thread.
      * <p/>
      * 每{@link FileDownloadEventPool#INTERVAL}毫秒抛最多1个Message到ui线程，并且每次抛到ui线程后，
      * 在ui线程最多处理处理{@link FileDownloadEventPool#SUB_PACKAGE_SIZE} 个回调。
@@ -114,7 +119,8 @@ public class FileDownloader {
      *                            default is {@link FileDownloadEventPool#DEFAULT_INTERVAL}
      *                            if the value is less than 0, each callback will always
      *                            {@link Handler#post(Runnable)} to ui thread immediately, may will
-     *                            cause drop frames, may will produce great pressure on the UI Thread Looper
+     *                            cause drop frames, may will produce great pressure on the UI
+     *                            Thread Looper
      * @see #enableAvoidDropFrame()
      * @see #disableAvoidDropFrame()
      * @see #setGlobalHandleSubPackageSize(int)
@@ -127,13 +133,17 @@ public class FileDownloader {
      * For Avoid Missing Screen Frames.
      * 避免掉帧
      * <p/>
-     * Every {@link FileDownloadEventPool#INTERVAL} milliseconds post 1 message to the ui thread at most,
-     * and will handle up to {@link FileDownloadEventPool#SUB_PACKAGE_SIZE} events(callbacks) on the ui thread.
+     * Every {@link FileDownloadEventPool#INTERVAL} milliseconds post 1 message to the ui thread at
+     * most,
+     * and will handle up to {@link FileDownloadEventPool#SUB_PACKAGE_SIZE} events(callbacks) on
+     * the
+     * ui thread.
      * <p/>
      * 每{@link FileDownloadEventPool#INTERVAL}毫秒抛最多1个Message到ui线程，并且每次抛到ui线程后，
      * 在ui线程最多处理处理{@link FileDownloadEventPool#SUB_PACKAGE_SIZE} 个回调。
      *
-     * @param packageSize per sub-package size for handle event on 1 ui {@link Handler#post(Runnable)}
+     * @param packageSize per sub-package size for handle event on 1 ui {@link
+     *                    Handler#post(Runnable)}
      *                    default is {@link FileDownloadEventPool#DEFAULT_SUB_PACKAGE_SIZE}
      * @see #setGlobalPost2UIInterval(int)
      */
@@ -156,7 +166,8 @@ public class FileDownloader {
     }
 
     /**
-     * Disable avoid missing screen frames, let all callbacks in {@link FileDownloadListener} will be invoked
+     * Disable avoid missing screen frames, let all callbacks in {@link FileDownloadListener} will
+     * be invoked
      * at once when it achieve.
      *
      * @see #isEnabledAvoidDropFrame()
@@ -333,7 +344,8 @@ public class FileDownloader {
     }
 
     /**
-     * Bind & start ':filedownloader' process manually(Do not need, will bind & start automatically by Download Engine if real need)
+     * Bind & start ':filedownloader' process manually(Do not need, will bind & start automatically
+     * by Download Engine if real need)
      */
     public void bindService() {
         if (!isServiceConnected()) {
@@ -342,7 +354,8 @@ public class FileDownloader {
     }
 
     /**
-     * Unbind & stop ':filedownloader' process manually(Do not need, will unbind & stop automatically by System if leave unused period)
+     * Unbind & stop ':filedownloader' process manually(Do not need, will unbind & stop
+     * automatically by System if leave unused period)
      */
     public void unBindService() {
         if (isServiceConnected()) {

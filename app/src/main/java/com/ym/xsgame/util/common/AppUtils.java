@@ -271,7 +271,7 @@ public class AppUtils {
             // LAUNCHER Intent
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
-
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             // 设置ComponentName参数1:packagename参数2:MainActivity路径
             ComponentName cn = new ComponentName(packageName, className);
 
@@ -281,7 +281,7 @@ public class AppUtils {
     }
 
 
-    public  static  void install(Context ctx, String filePath) {
+    public static void install(Context ctx, String filePath) {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setDataAndType(Uri.parse("file://" + filePath), "application/vnd.android.package-archive");
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

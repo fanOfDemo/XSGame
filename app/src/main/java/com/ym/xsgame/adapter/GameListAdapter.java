@@ -9,6 +9,7 @@ import com.ym.xsgame.util.common.AppUtils;
 import com.ym.xsgame.widget.AutoScrollViewPager.AutoScrollViewPager;
 import com.ym.xsgame.widget.CirclePageIndicator;
 
+import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,11 +36,12 @@ public class GameListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_header, parent, false);
 //            return new VHHeader(v);
 //        } else
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_data_item, parent, false);
-            return new ViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_data_item, parent, false);
+        return new ViewHolder(v);
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ViewHolder) {
@@ -69,25 +71,27 @@ public class GameListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            ((ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dt.getItype() == 1) {//H5游戏
+                        mGameClickListener.onPageGameClick(dt);
+                    } else if (dt.getItype() == 2) {//需要下载的手游
+                        mGameClickListener.onApkGameDownLoadClick(dt);
+                    }
+                }
+            });
+            ((ViewHolder) holder).aciton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    "/api/syxs/sgame/begin.php?gameid=200243&amp;ty=0"
                     if (dt.getItype() == 1) {//H5游戏
                         ((ViewHolder) holder).aciton.setText("go");
                         mGameClickListener.onPageGameClick(dt);
                     } else if (dt.getItype() == 2) {//需要下载的手游
                         if (AppUtils.checkInstalled(holder.itemView.getContext(), packageName)) {
                             mGameClickListener.onApkGameOpenClick(dt);
-//                            url="javascript:gameList.openGame('"+spackage+"',"+gameid+");";
-//                            startTag="打开";
-                            ((ViewHolder) holder).aciton.setText("打开");
                         } else {
                             mGameClickListener.onApkGameDownLoadClick(dt);
-                            ((ViewHolder) holder).aciton.setText("下载");
-//                            //url=surl;
-//                            url="javascript:gameList.downGame('"+gameid+"','1','"+surl+"');";
-//                            startTag="下载";
                         }
                     }
                 }

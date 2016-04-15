@@ -1,15 +1,15 @@
 package com.ym.xsgame;
 
-import com.ym.xsgame.util.common.L;
 import com.ym.xsgame.util.common.SDCardUtils;
+import com.ym.xsgame.util.retrofit.OkHttpClientManager;
 import com.yw.filedownloader.FileDownloader;
 import com.yw.filedownloader.util.FileDownloadHelper;
+import com.yw.filedownloader.util.FileDownloadLog;
 import com.yw.filedownloader.util.FileDownloadUtils;
 
 import android.app.Application;
 
-import java.net.Proxy;
-import java.util.concurrent.TimeUnit;
+import java.io.File;
 
 import okhttp3.OkHttpClient;
 
@@ -39,30 +39,23 @@ public class AppClient extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        L.isDebug = true;
         sInstance = this;
-        /**
-         * 每10 毫秒抛最多1个Message到ui线程，并且每次抛到ui线程后，
-         * 在ui线程最多处理处理5个回调。
-         * <p/>
-         */
-        FileDownloader.enableAvoidDropFrame();//避免掉帧
-        FileDownloader.setGlobalHandleSubPackageSize(5);//DEFAULT_SUB_PACKAGE_SIZE=5
-        FileDownloadUtils.setDefaultSaveRootPath(SDCardUtils.getSDCardPath());//设置默认下载地址为sd跟目录
+        FileDownloadLog.NEED_LOG = true;
         FileDownloader.init(getApplicationContext(),
                 new FileDownloadHelper.OkHttpClientCustomMaker() { // is not has to provide.
                     @Override
                     public OkHttpClient customMake() {
-                        // just for OkHttpClient customize.
-                        final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-                        // you can set the connection timeout.
-                        builder.connectTimeout(15_000, TimeUnit.MILLISECONDS);
-                        // you can set the HTTP proxy.
-                        builder.proxy(Proxy.NO_PROXY);
-                        // etc.
-                        return builder.build();
+                        return OkHttpClientManager.getInstance();
                     }
                 });
+        /**
+         * 每10 毫秒抛最多1个Message到ui线程，并且每次抛到ui线程后，
+         * 在ui线程最多处理处理5个回调。
+         * 设置默认下载目录
+         */
+        FileDownloader.enableAvoidDropFrame();
+        FileDownloader.setGlobalHandleSubPackageSize(5);
+        FileDownloadUtils.setDefaultSaveRootPath(SDCardUtils.getSDCardPath() + File.separator + "QdGameDownload");//设置默认下载地址为sd跟目录
 //        refWatcher = LeakCanary.install(sInstance);
     }
 
